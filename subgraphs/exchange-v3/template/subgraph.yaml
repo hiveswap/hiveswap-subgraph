@@ -1,10 +1,8 @@
-specVersion: 0.0.4
+specVersion: 0.0.2
 description: HiveSwap is a multi-chain decentralized exchange and automated market maker protocol.
 repository: https://github.com/hiveswap/hiveswap-subgraph
 schema:
   file: ./schema.graphql
-features:
-  - nonFatalErrors
 dataSources:
   - kind: ethereum/contract
     name: Factory
@@ -15,7 +13,7 @@ dataSources:
       startBlock: 9603504
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./mappings/factory.ts
       entities:
@@ -44,7 +42,7 @@ dataSources:
       startBlock: 9607052
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./mappings/position-manager.ts
       entities:
@@ -76,7 +74,7 @@ templates:
       abi: Pool
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./mappings/core.ts
       entities:
