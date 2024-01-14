@@ -3,6 +3,8 @@ description: HiveSwap is a multi-chain decentralized exchange and automated mark
 repository: https://github.com/hiveswap/hiveswap-subgraph
 schema:
   file: ./schema.graphql
+features:
+  - nonFatalErrors
 dataSources:
   - kind: ethereum/contract
     name: Factory
