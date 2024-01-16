@@ -1,21 +1,21 @@
-specVersion: 0.0.4
-description: HiveSwap is a multi-chain decentralized exchange and automated market maker protocol.
-repository: https://github.com/hiveswap/hiveswap-subgraph
+specVersion: 0.0.2
+description: PancakeSwap is a multi-chain decentralized exchange and automated market maker protocol.
+repository: https://github.com/pancakeswap/pancake-subgraph
 schema:
   file: ./schema.graphql
-#features:
-#  - nonFatalErrors
+features:
+  - nonFatalErrors
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: mapo
+    network: {{ network }}
     source:
-      address: "0xa67D9F9Ff6F75693A2Dc89727266D934Bef491f7"
+      address: "{{v3.factoryAddress}}"
       abi: Factory
-      startBlock: 9603514
+      startBlock: {{ v3.startBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       file: ./mappings/factory.ts
       entities:
@@ -37,14 +37,14 @@ dataSources:
           handler: handlePoolCreated
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: mapo
+    network: {{network}}
     source:
-      address: "0x8D1b3b5c9f3484243d0248587c335F640495bBbD"
+      address: "{{v3.nonfungiblePositionManagerAddress}}"
       abi: NonfungiblePositionManager
-      startBlock: 9607052
+      startBlock: {{ v3.nonfungiblePositionManagerStartBlock }}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       file: ./mappings/position-manager.ts
       entities:
@@ -71,12 +71,12 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: mapo
+    network: {{ network }}
     source:
       abi: Pool
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       file: ./mappings/core.ts
       entities:
