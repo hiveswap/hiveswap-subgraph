@@ -56,6 +56,9 @@ export function handleInitialize(event: Initialize): void {
 
   // update ETH price now that prices could have changed
   let bundle = Bundle.load("1");
+  if (!bundle) {
+    return;
+  }
   bundle.ethPriceUSD = getEthPriceInUSD();
   bundle.save();
 
@@ -71,6 +74,9 @@ export function handleInitialize(event: Initialize): void {
 
 export function handleMint(event: MintEvent): void {
   let bundle = Bundle.load("1");
+  if (!bundle) {
+    return;
+  }
   let poolAddress = event.address.toHexString();
   let pool = Pool.load(poolAddress);
   if (!pool) {
@@ -199,6 +205,9 @@ export function handleMint(event: MintEvent): void {
 
 export function handleBurn(event: BurnEvent): void {
   let bundle = Bundle.load("1");
+  if (!bundle) {
+    return;
+  }
   let poolAddress = event.address.toHexString();
   let pool = Pool.load(poolAddress);
   if (!pool) {
@@ -307,6 +316,9 @@ export function handleBurn(event: BurnEvent): void {
 
 export function handleSwap(event: SwapEvent): void {
   let bundle = Bundle.load("1");
+  if (!bundle) {
+    return;
+  }
   let factory = Factory.load(FACTORY_ADDRESS);
   let pool = Pool.load(event.address.toHexString());
   if (!pool) {
