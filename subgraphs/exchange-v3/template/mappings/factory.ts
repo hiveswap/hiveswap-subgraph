@@ -7,26 +7,13 @@ import { Pool, Token, Bundle } from "../generated/schema";
 import { Pool as PoolTemplate } from "../generated/templates";
 import { fetchTokenSymbol, fetchTokenName, fetchTokenTotalSupply, fetchTokenDecimals } from "../utils/token";
 import { log, BigInt } from "@graphprotocol/graph-ts";
+import { createEmptyFactory } from "../utils/new";
 
 export function handlePoolCreated(event: PoolCreated): void {
   // load factory
   let factory = Factory.load(FACTORY_ADDRESS);
   if (factory === null) {
-    factory = new Factory(FACTORY_ADDRESS);
-    factory.poolCount = ZERO_BI;
-    factory.totalVolumeETH = ZERO_BD;
-    factory.totalVolumeUSD = ZERO_BD;
-    factory.untrackedVolumeUSD = ZERO_BD;
-    factory.totalFeesUSD = ZERO_BD;
-    factory.totalFeesETH = ZERO_BD;
-    factory.totalProtocolFeesUSD = ZERO_BD;
-    factory.totalProtocolFeesETH = ZERO_BD;
-    factory.totalValueLockedETH = ZERO_BD;
-    factory.totalValueLockedUSD = ZERO_BD;
-    factory.totalValueLockedUSDUntracked = ZERO_BD;
-    factory.totalValueLockedETHUntracked = ZERO_BD;
-    factory.txCount = ZERO_BI;
-    factory.owner = ADDRESS_ZERO;
+    factory = createEmptyFactory();
 
     // create new bundle for tracking eth price
     let bundle = new Bundle("1");

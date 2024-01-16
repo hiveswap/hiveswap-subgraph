@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { Bundle, Burn, Factory, Mint, Pool, Swap, Tick, Token, Collect } from "../generated/schema";
 import { Pool as PoolABI } from "../generated/Factory/Pool";
-import { BigDecimal, BigInt, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, ethereum } from "@graphprotocol/graph-ts";
 import {
   Burn as BurnEvent,
   Flash as FlashEvent,
@@ -30,6 +30,7 @@ import {
 } from "../utils/intervalUpdates";
 import { createTick, feeTierToTickSpacing } from "../utils/tick";
 import { updateDerivedTVLAmounts } from "../utils/tvl";
+import { createEmptyFactory, createEmptyToken } from "../utils/new";
 
 export function handleInitialize(event: Initialize): void {
   // update pool sqrt price and tick
@@ -41,6 +42,14 @@ export function handleInitialize(event: Initialize): void {
   // update token prices
   let token0 = Token.load(pool.token0);
   let token1 = Token.load(pool.token1);
+
+  if (!token0) {
+    token0 = createEmptyToken(Address.fromString(pool.token0));
+  }
+
+  if (!token1) {
+    token1 = createEmptyToken(Address.fromString(pool.token1));
+  }
 
   // update ETH price now that prices could have changed
   let bundle = Bundle.load("1");
@@ -62,9 +71,21 @@ export function handleMint(event: MintEvent): void {
   let poolAddress = event.address.toHexString();
   let pool = Pool.load(poolAddress);
   let factory = Factory.load(FACTORY_ADDRESS);
-
   let token0 = Token.load(pool.token0);
   let token1 = Token.load(pool.token1);
+
+  if (!factory) {
+    factory = createEmptyFactory();
+  }
+
+  if (!token0) {
+    token0 = createEmptyToken(Address.fromString(pool.token0));
+  }
+
+  if (!token1) {
+    token1 = createEmptyToken(Address.fromString(pool.token1));
+  }
+
   let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals);
   let amount1 = convertTokenToDecimal(event.params.amount1, token1.decimals);
 
@@ -181,6 +202,18 @@ export function handleBurn(event: BurnEvent): void {
   let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals);
   let amount1 = convertTokenToDecimal(event.params.amount1, token1.decimals);
 
+  if (!factory) {
+    factory = createEmptyFactory();
+  }
+
+  if (!token0) {
+    token0 = createEmptyToken(Address.fromString(pool.token0));
+  }
+
+  if (!token1) {
+    token1 = createEmptyToken(Address.fromString(pool.token1));
+  }
+
   let amountUSD = amount0
     .times(token0.derivedETH.times(bundle.ethPriceUSD))
     .plus(amount1.times(token1.derivedETH.times(bundle.ethPriceUSD)));
@@ -275,6 +308,18 @@ export function handleSwap(event: SwapEvent): void {
 
   let token0 = Token.load(pool.token0);
   let token1 = Token.load(pool.token1);
+
+  if (!factory) {
+    factory = createEmptyFactory();
+  }
+
+  if (!token0) {
+    token0 = createEmptyToken(Address.fromString(pool.token0));
+  }
+
+  if (!token1) {
+    token1 = createEmptyToken(Address.fromString(pool.token1));
+  }
 
   let oldTick = pool.tick!;
 
@@ -532,6 +577,18 @@ export function handleCollect(event: CollectEvent): void {
   let token1 = Token.load(pool.token1);
   let transaction = loadTransaction(event);
 
+  if (!factory) {
+    factory = createEmptyFactory();
+  }
+
+  if (!token0) {
+    token0 = createEmptyToken(Address.fromString(pool.token0));
+  }
+
+  if (!token1) {
+    token1 = createEmptyToken(Address.fromString(pool.token1));
+  }
+
   // Get formatted amounts collected.
   let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals);
   let amount1 = convertTokenToDecimal(event.params.amount1, token1.decimals);
@@ -588,8 +645,19 @@ export function handleCollectProtocol(event: CollectProtocolEvent): void {
   // update fee growth
   let pool = Pool.load(event.address.toHexString());
   let factory = Factory.load(FACTORY_ADDRESS);
+  if (!factory) {
+    factory = createEmptyFactory();
+  }
   let token0 = Token.load(pool.token0);
   let token1 = Token.load(pool.token1);
+
+  if (!token0) {
+    token0 = createEmptyToken(Address.fromString(pool.token0));
+  }
+
+  if (!token1) {
+    token1 = createEmptyToken(Address.fromString(pool.token1));
+  }
 
   // Get formatted amounts collected.
   let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals);
