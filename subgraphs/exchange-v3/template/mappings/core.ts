@@ -217,19 +217,19 @@ export function handleBurn(event: BurnEvent): void {
 
   let token0 = Token.load(pool.token0);
   let token1 = Token.load(pool.token1);
-  let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals);
-  let amount1 = convertTokenToDecimal(event.params.amount1, token1.decimals);
-
-  if (!factory) {
-    factory = createEmptyFactory();
-  }
-
   if (!token0) {
     token0 = createEmptyToken(Address.fromString(pool.token0));
   }
 
   if (!token1) {
     token1 = createEmptyToken(Address.fromString(pool.token1));
+  }
+
+  let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals);
+  let amount1 = convertTokenToDecimal(event.params.amount1, token1.decimals);
+
+  if (!factory) {
+    factory = createEmptyFactory();
   }
 
   let amountUSD = amount0
@@ -291,6 +291,9 @@ export function handleBurn(event: BurnEvent): void {
   let upperTickId = poolAddress + "#" + BigInt.fromI32(event.params.tickUpper).toString();
   let lowerTick = Tick.load(lowerTickId);
   let upperTick = Tick.load(upperTickId);
+  if (!lowerTick || !upperTick) {
+    return;
+  }
   let amount = event.params.amount;
   lowerTick.liquidityGross = lowerTick.liquidityGross.minus(amount);
   lowerTick.liquidityNet = lowerTick.liquidityNet.minus(amount);
