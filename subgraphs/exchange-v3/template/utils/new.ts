@@ -1,7 +1,7 @@
 import { Factory, Token } from "../generated/schema";
 import { ADDRESS_ZERO, FACTORY_ADDRESS, ZERO_BD, ZERO_BI } from "./constants";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol, fetchTokenTotalSupply } from "./token";
-import { Address, log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 
 export const createEmptyFactory = (): Factory => {
   const factory = new Factory(FACTORY_ADDRESS);
@@ -31,9 +31,8 @@ export const createEmptyToken = (tokenAddress: Address): Token => {
   let decimals = fetchTokenDecimals(tokenAddress);
 
   // bail if we couldn't figure out the decimals
-  if (decimals === null) {
-    log.debug("mybug the decimal on token 0 was null", []);
-    return;
+  if (!decimals) {
+    decimals = BigInt.fromI32(18);
   }
 
   token0.decimals = decimals;
