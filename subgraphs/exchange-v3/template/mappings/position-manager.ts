@@ -90,8 +90,8 @@ export function handleIncreaseLiquidity(event: IncreaseLiquidity): void {
   let token0 = Token.load(position.token0);
   let token1 = Token.load(position.token1);
 
-  let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals);
-  let amount1 = convertTokenToDecimal(event.params.amount1, token1.decimals);
+  let amount0 = convertTokenToDecimal(event.params.amount0, token0 ? token0.decimals : BigInt.fromI32(18));
+  let amount1 = convertTokenToDecimal(event.params.amount1, token1 ? token1.decimals : BigInt.fromI32(18));
 
   position.liquidity = position.liquidity.plus(event.params.liquidity);
   position.depositedToken0 = position.depositedToken0.plus(amount0);
@@ -114,8 +114,8 @@ export function handleDecreaseLiquidity(event: DecreaseLiquidity): void {
 
   let token0 = Token.load(position.token0);
   let token1 = Token.load(position.token1);
-  let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals);
-  let amount1 = convertTokenToDecimal(event.params.amount1, token1.decimals);
+  let amount0 = convertTokenToDecimal(event.params.amount0, token0 ? token0.decimals : BigInt.fromI32(18));
+  let amount1 = convertTokenToDecimal(event.params.amount1, token1 ? token1.decimals : BigInt.fromI32(18));
 
   position.liquidity = position.liquidity.minus(event.params.liquidity);
   position.withdrawnToken0 = position.withdrawnToken0.plus(amount0);
@@ -137,7 +137,7 @@ export function handleCollect(event: Collect): void {
   // }
 
   let token0 = Token.load(position.token0);
-  let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals);
+  let amount0 = convertTokenToDecimal(event.params.amount0, token0 ? token0.decimals : BigInt.fromI32(18));
   position.collectedFeesToken0 = position.collectedFeesToken0.plus(amount0);
   position.collectedFeesToken1 = position.collectedFeesToken1.plus(amount0);
 

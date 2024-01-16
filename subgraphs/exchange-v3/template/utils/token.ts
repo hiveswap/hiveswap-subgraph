@@ -64,12 +64,12 @@ export function fetchTokenName(tokenAddress: Address): string {
 
 export function fetchTokenTotalSupply(tokenAddress: Address): BigInt {
   let contract = ERC20.bind(tokenAddress);
-  let totalSupplyValue = null;
+  let totalSupplyValue = 0;
   let totalSupplyResult = contract.try_totalSupply();
   if (!totalSupplyResult.reverted) {
-    totalSupplyValue = totalSupplyResult as i32;
+    totalSupplyValue = totalSupplyResult.value.toI32();
   }
-  return BigInt.fromI32(totalSupplyValue as i32);
+  return BigInt.fromI32(totalSupplyValue);
 }
 
 export function fetchTokenDecimals(tokenAddress: Address): BigInt {
