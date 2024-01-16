@@ -35,6 +35,9 @@ import { createEmptyFactory, createEmptyToken } from "../utils/new";
 export function handleInitialize(event: Initialize): void {
   // update pool sqrt price and tick
   let pool = Pool.load(event.address.toHexString());
+  if (!pool) {
+    return;
+  }
   pool.sqrtPrice = event.params.sqrtPriceX96;
   pool.tick = BigInt.fromI32(event.params.tick);
   pool.save();
@@ -70,6 +73,9 @@ export function handleMint(event: MintEvent): void {
   let bundle = Bundle.load("1");
   let poolAddress = event.address.toHexString();
   let pool = Pool.load(poolAddress);
+  if (!pool) {
+    return;
+  }
   let factory = Factory.load(FACTORY_ADDRESS);
   let token0 = Token.load(pool.token0);
   let token1 = Token.load(pool.token1);
@@ -195,6 +201,9 @@ export function handleBurn(event: BurnEvent): void {
   let bundle = Bundle.load("1");
   let poolAddress = event.address.toHexString();
   let pool = Pool.load(poolAddress);
+  if (!pool) {
+    return;
+  }
   let factory = Factory.load(FACTORY_ADDRESS);
 
   let token0 = Token.load(pool.token0);
@@ -300,6 +309,9 @@ export function handleSwap(event: SwapEvent): void {
   let bundle = Bundle.load("1");
   let factory = Factory.load(FACTORY_ADDRESS);
   let pool = Pool.load(event.address.toHexString());
+  if (!pool) {
+    return;
+  }
 
   // // hot fix for bad pricing
   // if (pool.id == "0x9663f2ca0454accad3e094448ea6f77443880454") {
@@ -541,6 +553,9 @@ export function handleSwap(event: SwapEvent): void {
 export function handleFlash(event: FlashEvent): void {
   // update fee growth
   let pool = Pool.load(event.address.toHexString());
+  if (!pool) {
+    return;
+  }
   let poolContract = PoolABI.bind(event.address);
   let feeGrowthGlobal0X128 = poolContract.feeGrowthGlobal0X128();
   let feeGrowthGlobal1X128 = poolContract.feeGrowthGlobal1X128();
@@ -572,6 +587,9 @@ function loadTickUpdateFeeVarsAndSave(tickId: i32, event: ethereum.Event): void 
 export function handleCollect(event: CollectEvent): void {
   // update fee growth
   let pool = Pool.load(event.address.toHexString());
+  if (!pool) {
+    return;
+  }
   let factory = Factory.load(FACTORY_ADDRESS);
   let token0 = Token.load(pool.token0);
   let token1 = Token.load(pool.token1);
@@ -644,6 +662,9 @@ export function handleCollect(event: CollectEvent): void {
 export function handleCollectProtocol(event: CollectProtocolEvent): void {
   // update fee growth
   let pool = Pool.load(event.address.toHexString());
+  if (!pool) {
+    return;
+  }
   let factory = Factory.load(FACTORY_ADDRESS);
   if (!factory) {
     factory = createEmptyFactory();

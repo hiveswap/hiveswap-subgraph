@@ -67,6 +67,9 @@ export function findEthPerToken(token: Token): BigDecimal {
     for (let i = 0; i < whiteList.length; ++i) {
       let poolAddress = whiteList[i];
       let pool = Pool.load(poolAddress);
+      if (!pool) {
+        continue;
+      }
 
       if (pool.liquidity.gt(ZERO_BI)) {
         if (pool.token0 == token.id) {
