@@ -1,14 +1,18 @@
 /* eslint-disable prefer-const */
-import { ADDRESS_ZERO, FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI } from "./../utils/constants";
 import { Bundle, Factory } from "../generated/schema";
 import { PoolCreated } from "../generated/Factory/Factory";
+/* eslint-disable prefer-const */
+import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
+
 
 export function handlePoolCreated(event: PoolCreated): void {
+  const ZERO_BD =  BigDecimal.fromString("0")
+  const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
   // load factory
-  let factory = Factory.load(FACTORY_ADDRESS);
+  let factory = Factory.load("0xa67D9F9Ff6F75693A2Dc89727266D934Bef491f7");
   if (factory === null) {
-    factory = new Factory(FACTORY_ADDRESS);
-    factory.poolCount = ZERO_BI;
+    factory = new Factory("0xa67D9F9Ff6F75693A2Dc89727266D934Bef491f7");
+    factory.poolCount = BigInt.fromI32(0);
     factory.totalVolumeETH = ZERO_BD;
     factory.totalVolumeUSD = ZERO_BD;
     factory.untrackedVolumeUSD = ZERO_BD;
@@ -20,16 +24,16 @@ export function handlePoolCreated(event: PoolCreated): void {
     factory.totalValueLockedUSD = ZERO_BD;
     factory.totalValueLockedUSDUntracked = ZERO_BD;
     factory.totalValueLockedETHUntracked = ZERO_BD;
-    factory.txCount = ZERO_BI;
+    factory.txCount = BigInt.fromI32(0);
     factory.owner = ADDRESS_ZERO;
 
     // create new bundle for tracking eth price
-    let bundle = new Bundle("1");
-    bundle.ethPriceUSD = ZERO_BD;
-    bundle.save();
+    // let bundle = new Bundle("1");
+    // bundle.ethPriceUSD = ZERO_BD;
+    // bundle.save();
   }
 
-  factory.poolCount = factory.poolCount.plus(ONE_BI);
+  factory.poolCount = factory.poolCount.plus(BigInt.fromI32(1));
 
   factory.save();
 }
