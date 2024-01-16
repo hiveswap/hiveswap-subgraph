@@ -3,7 +3,7 @@ import { ADDRESS_ZERO, FACTORY_ADDRESS, ZERO_BD, ZERO_BI } from "./constants";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol, fetchTokenTotalSupply } from "./token";
 import { Address, log } from "@graphprotocol/graph-ts";
 
-export const createEmptyFactory = () => {
+export const createEmptyFactory = (): Factory => {
   const factory = new Factory(FACTORY_ADDRESS);
   factory.poolCount = ZERO_BI;
   factory.totalVolumeETH = ZERO_BD;
@@ -23,7 +23,7 @@ export const createEmptyFactory = () => {
   return factory;
 };
 
-export const createEmptyToken = (tokenAddress: Address) => {
+export const createEmptyToken = (tokenAddress: Address): Token => {
   const token0 = new Token(tokenAddress.toHexString());
   token0.symbol = fetchTokenSymbol(tokenAddress);
   token0.name = fetchTokenName(tokenAddress);

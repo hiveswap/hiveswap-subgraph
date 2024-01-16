@@ -12,7 +12,7 @@ import { createEmptyFactory } from "../utils/new";
 export function handlePoolCreated(event: PoolCreated): void {
   // load factory
   let factory = Factory.load(FACTORY_ADDRESS);
-  if (factory === null) {
+  if (!factory) {
     factory = createEmptyFactory();
 
     // create new bundle for tracking eth price
@@ -28,7 +28,7 @@ export function handlePoolCreated(event: PoolCreated): void {
   let token1 = Token.load(event.params.token1.toHexString());
 
   // fetch info if null
-  if (token0 === null) {
+  if (!token0) {
     token0 = new Token(event.params.token0.toHexString());
     token0.symbol = fetchTokenSymbol(event.params.token0);
     token0.name = fetchTokenName(event.params.token0);
@@ -57,7 +57,7 @@ export function handlePoolCreated(event: PoolCreated): void {
     token0.whitelistPools = [];
   }
 
-  if (token1 === null) {
+  if (!token1) {
     token1 = new Token(event.params.token1.toHexString());
     token1.symbol = fetchTokenSymbol(event.params.token1);
     token1.name = fetchTokenName(event.params.token1);
