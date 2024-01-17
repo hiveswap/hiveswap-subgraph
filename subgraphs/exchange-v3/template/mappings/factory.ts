@@ -1,4 +1,3 @@
-import { WHITELIST_TOKENS } from "./../utils/pricing";
 /* eslint-disable prefer-const */
 import { FACTORY_ADDRESS, ZERO_BI, ONE_BI, ZERO_BD, ADDRESS_ZERO } from "./../utils/constants";
 import { Factory } from "../generated/schema";
@@ -82,18 +81,6 @@ export function handlePoolCreated(event: PoolCreated): void {
     token1.txCount = ZERO_BI;
     token1.poolCount = ZERO_BI;
     token1.whitelistPools = [];
-  }
-
-  // update white listed pools
-  if (WHITELIST_TOKENS.includes(token0.id)) {
-    let newPools = token1.whitelistPools;
-    newPools.push(pool.id);
-    token1.whitelistPools = newPools;
-  }
-  if (WHITELIST_TOKENS.includes(token1.id)) {
-    let newPools = token0.whitelistPools;
-    newPools.push(pool.id);
-    token0.whitelistPools = newPools;
   }
 
   let feeTier = BigInt.fromI32(event.params.fee);
