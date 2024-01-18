@@ -104,3 +104,7 @@ templates:
           handler: handleCollect
         - event: CollectProtocol(indexed address,indexed address,uint128,uint128)
           handler: handleCollectProtocol
+
+
+
+

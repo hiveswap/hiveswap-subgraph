@@ -32,15 +32,7 @@ export function handlePoolCreated(event: PoolCreated): void {
     token0.symbol = fetchTokenSymbol(event.params.token0);
     token0.name = fetchTokenName(event.params.token0);
     token0.totalSupply = fetchTokenTotalSupply(event.params.token0);
-    let decimals = fetchTokenDecimals(event.params.token0);
-
-    // bail if we couldn't figure out the decimals
-    if (decimals === null) {
-      log.debug("mybug the decimal on token 0 was null", []);
-      return;
-    }
-
-    token0.decimals = decimals;
+    token0.decimals = fetchTokenDecimals(event.params.token0);
     token0.derivedETH = ZERO_BD;
     token0.derivedUSD = ZERO_BD;
     token0.volume = ZERO_BD;
@@ -61,13 +53,7 @@ export function handlePoolCreated(event: PoolCreated): void {
     token1.symbol = fetchTokenSymbol(event.params.token1);
     token1.name = fetchTokenName(event.params.token1);
     token1.totalSupply = fetchTokenTotalSupply(event.params.token1);
-    let decimals = fetchTokenDecimals(event.params.token1);
-    // bail if we couldn't figure out the decimals
-    if (decimals === null) {
-      log.debug("mybug the decimal on token 0 was null", []);
-      return;
-    }
-    token1.decimals = decimals;
+    token1.decimals = fetchTokenDecimals(event.params.token1);
     token1.derivedETH = ZERO_BD;
     token1.derivedUSD = ZERO_BD;
     token1.volume = ZERO_BD;
@@ -116,6 +102,7 @@ export function handlePoolCreated(event: PoolCreated): void {
   pool.collectedFeesToken0 = ZERO_BD;
   pool.collectedFeesToken1 = ZERO_BD;
   pool.collectedFeesUSD = ZERO_BD;
+  pool.tick = BigInt.fromI32(0);
 
   pool.save();
   // create the tracked contract based on the template

@@ -28,14 +28,7 @@ export const createEmptyToken = (tokenAddress: Address): Token => {
   token0.symbol = fetchTokenSymbol(tokenAddress);
   token0.name = fetchTokenName(tokenAddress);
   token0.totalSupply = fetchTokenTotalSupply(tokenAddress);
-  let decimals = fetchTokenDecimals(tokenAddress);
-
-  // bail if we couldn't figure out the decimals
-  if (!decimals) {
-    decimals = BigInt.fromI32(18);
-  }
-
-  token0.decimals = decimals;
+  token0.decimals = fetchTokenDecimals(tokenAddress);
   token0.derivedETH = ZERO_BD;
   token0.derivedUSD = ZERO_BD;
   token0.volume = ZERO_BD;

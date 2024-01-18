@@ -64,18 +64,18 @@ export function fetchTokenName(tokenAddress: Address): string {
 
 export function fetchTokenTotalSupply(tokenAddress: Address): BigInt {
   let contract = ERC20.bind(tokenAddress);
-  let totalSupplyValue = 0;
   let totalSupplyResult = contract.try_totalSupply();
   if (!totalSupplyResult.reverted) {
-    totalSupplyValue = totalSupplyResult.value.toI32();
+    return totalSupplyResult.value;
+  } else {
+    return BigInt.fromI32(0);
   }
-  return BigInt.fromI32(totalSupplyValue);
 }
 
 export function fetchTokenDecimals(tokenAddress: Address): BigInt {
   let contract = ERC20.bind(tokenAddress);
   // try types uint8 for decimals
-  let decimalValue = null;
+  let decimalValue = 0;
   let decimalResult = contract.try_decimals();
   if (!decimalResult.reverted) {
     decimalValue = decimalResult.value;
@@ -84,8 +84,10 @@ export function fetchTokenDecimals(tokenAddress: Address): BigInt {
     let staticTokenDefinition = StaticTokenDefinition.fromAddress(tokenAddress);
     if (staticTokenDefinition != null) {
       return staticTokenDefinition.decimals;
+    } else {
+      return BigInt.fromI32(18);
     }
   }
 
-  return BigInt.fromI32(decimalValue as i32);
+  return BigInt.fromI32(decimalValue);
 }

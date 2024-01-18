@@ -10,16 +10,12 @@ const WETH_ADDRESS = "0x5300000000000000000000000000000000000004";
 // prettier-ignore
 const USDC_WETH_03_POOL = "0xb4ea03fd982685c68279cfe6dd05dd26521c35dd";
 
-const STABLE_IS_TOKEN0 = "true" as string;
-
 let MINIMUM_ETH_LOCKED = BigDecimal.fromString("0");
 
-let Q192 = 2 ** 192;
+let Q192 = BigInt.fromI32(2).pow(192).toBigDecimal();
 export function sqrtPriceX96ToTokenPrices(sqrtPriceX96: BigInt, token0: Token, token1: Token): BigDecimal[] {
   let num = sqrtPriceX96.times(sqrtPriceX96).toBigDecimal();
-  let denom = BigDecimal.fromString(Q192.toString());
-  let price1 = num.div(denom).times(exponentToBigDecimal(token0.decimals)).div(exponentToBigDecimal(token1.decimals));
-
+  let price1 = num.div(Q192).times(exponentToBigDecimal(token0.decimals)).div(exponentToBigDecimal(token1.decimals));
   let price0 = safeDiv(BigDecimal.fromString("1"), price1);
   return [price0, price1];
 }
@@ -28,9 +24,6 @@ export function getEthPriceInUSD(): BigDecimal {
   // fetch eth prices for each stablecoin
   let usdcPool = Pool.load(USDC_WETH_03_POOL); // dai is token0
   if (usdcPool !== null) {
-    if (STABLE_IS_TOKEN0 === "true") {
-      return usdcPool.token0Price;
-    }
     return usdcPool.token1Price;
   } else {
     return ZERO_BD;
@@ -76,7 +69,7 @@ export function findEthPerToken(token: Token): BigDecimal {
         if (ethLocked.gt(largestLiquidityETH) && ethLocked.gt(MINIMUM_ETH_LOCKED)) {
           largestLiquidityETH = ethLocked;
           // token1 per our token * Eth per token1
-          priceSoFar = pool.token1Price.times(token1.derivedETH as BigDecimal);
+          priceSoFar = pool.token1Price.times(token1.derivedETH);
         }
       }
       if (pool.token1 == token.id) {
@@ -89,7 +82,7 @@ export function findEthPerToken(token: Token): BigDecimal {
         if (ethLocked.gt(largestLiquidityETH) && ethLocked.gt(MINIMUM_ETH_LOCKED)) {
           largestLiquidityETH = ethLocked;
           // token0 per our token * ETH per token0
-          priceSoFar = pool.token0Price.times(token0.derivedETH as BigDecimal);
+          priceSoFar = pool.token0Price.times(token0.derivedETH);
         }
       }
     }
